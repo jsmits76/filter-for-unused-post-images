@@ -1,0 +1,49 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deploy to WordPress.org
+on:
+  push:
+    tags:
+    - "*"
+jobs:
+  tag:
+    name: New tag
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: WordPress Plugin Deploy
+      id: deploy
+      uses: 10up/action-wordpress-plugin-deploy@stable
+      with:
+        # The slug of your plugin on WordPress.org.
+        # The slug is the part of the URL of your plugin page.
+        # For example, `https://wordpress.org/plugins/hello-dolly/` has the slug `hello-dolly`.
+        # Defaults to the name of the GitHub repository.
+        # slug: ${{ github.repository_name }}
+
+        # The version of your plugin.
+        # If you don't specify this, the action will try to derive it from the tag.
+        # For example, if you push a tag `v1.2.3`, the version will be `1.2.3`.
+        # version: ${{ github.ref_name }}
+
+        # Your WordPress.org username.
+        # It's better to use a secret for this.
+        username: ${{ secrets.SVN_USERNAME }}
+
+        # Your WordPress.org password.
+        # It's better to use a secret for this.
+        # You should use an application password.
+        # See https://make.wordpress.org/core/2022/11/09/application-passwords-are-now-available-for-the-plugin-and-theme-repositories/
+        password: ${{ secrets.SVN_PASSWORD }}
+
+        # The path to the plugin's assets directory.
+        # The assets are things like banners and screenshots.
+        # The contents of this directory will be copied to the SVN `assets` directory.
+        # Defaults to `.wordpress-org`.
+        # assets_path: ".wordpress-org"
+
+        # The path to the plugin's directory.
+        # The contents of this directory will be copied to the SVN `trunk` directory.
+        # Defaults to the root of the repository.
+        # build_path: "."
